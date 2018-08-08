@@ -57,7 +57,7 @@ using namespace std;
   cout<<"mode1 = poisson fitting,mode2 = Entries analysis"<<endl;
   cout<<"please type 1 or 2"<<endl;
   cin>>mode;
-  const string f_name = output_filename +".root";
+  const char* f_name = output_filename.c_str() +".root";
 
   //each position fitting
   for(int filenumber = begin_file_number;filenumber <= last_file_number;filenumber++){ 
