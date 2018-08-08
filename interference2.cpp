@@ -57,6 +57,7 @@ using namespace std;
   cout<<"mode1 = poisson fitting,mode2 = Entries analysis"<<endl;
   cout<<"please type 1 or 2"<<endl;
   cin>>mode;
+  const string f_name = output_filename +".root";
 
   //each position fitting
   for(int filenumber = begin_file_number;filenumber <= last_file_number;filenumber++){ 
@@ -69,7 +70,7 @@ using namespace std;
     tr1->GetEntry(event);
     adc_hist->Fill(adc[ch]);
    }
-   TFile * output_file = new TFile(output_filename + ".root","RECREATE");
+   TFile * output_file = new TFile(f_name,"RECREATE");
    adc_hist->Draw();
    adc_hist->Write();
 
@@ -88,7 +89,7 @@ using namespace std;
   }
 
    TCanvas * c1 = new TCanvas(Form("line_fit%d",filenumber),Form("line_fit%d",filenumber),1600,900);
-   TGraphErrors* g1 = new TGraphErrors(peak_number,gaus_x,fit_adc_mean,0,fit_adc_sigma);
+   TGraphErrors* g1 = new TGraphErrors(peak_number,&(gaus_x.at(0)),&(fit_adc_mean.at(0)),0,&(fit_adc_sigma.at(0)));
    TF1 * f1 = new TF1("f1","[0] + [1] * x",-1,3);
    f1->SetParameter(0,0);
    f1->SetParameter(1,0);
@@ -113,7 +114,7 @@ using namespace std;
    
    output_file->cd();
    TCanvas * c2 = new TCanvas(Form("pe_hist%d",filenumber),Form("pe_hist%d",filenumber),1600,900);
-   x_pos.push_back(0.002*(first_position + stage_step*(filenumber - begin)));
+   x_pos.push_back(0.002*(first_position + stage_step*(filenumber - begin_file_number)));
    TF1 * fit_poisson = new TF1("poisson","[0]*TMath::Poisson(x,[1])",0,100);
    fit_poisson->SetParameter(0,10000);
    fit_poisson->SetParameter(1,3);
@@ -143,7 +144,7 @@ using namespace std;
   double * xpointer = &(x_pos.at(0));
   double * ypointer = &(pe_mean.at(0));
   double * y_errpointer = &(pe_mean_err.at(0));
-  TCanvas * c1 = new TCanvas(Form("interference%d",filenumber),Form("interference%d",filenumber),1600,900);
+  TCanvas * c1 = new TCanvas("interference","interference",1600,900);
   TGraphErrors *g2 = new TGraphErrors(x_pos.size(),xpointer,ypointer,0,y_errpointer);
   g2 -> Draw("AP");
   c1->Write();
