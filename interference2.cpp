@@ -33,8 +33,8 @@ using namespace std;
   int first_position;
   int stage_step;
   const int peak_number = 2;
-  int begin;
-  int last;
+  int begin_file_number;
+  int last_file_number;
   string output_filename;
   int mode;
  void interference2(){
@@ -44,9 +44,9 @@ using namespace std;
 
   //determine measurement condition
   cout<<"please input first file number"<<endl;
-  cin>>begin;
+  cin>>begin_file_number;
   cout<<"please input last file number"<<endl;
-  cin>>last;
+  cin>>last_file_number;
   cout<<"please input first stage position"<<endl;
   cin>>first_position;
   cout<<"please input each stage step"<<endl;
@@ -59,7 +59,7 @@ using namespace std;
   cin>>mode;
 
   //each position fitting
-  for(int filenumber = begin;filenumber <= last;filenumber++){ 
+  for(int filenumber = begin_file_number;filenumber <= last_file_number;filenumber++){ 
    auto tf1 = TFile::Open(Form("./data/sc0%d.root",filenumber));
    auto tr1 = dynamic_cast<TTree*>(tf1->Get("tree"));
    TH1D * adc_hist = new TH1D(Form("adc_hist%d",filenumber),Form("adc_hist%d",filenumber),4000,0,4000);
